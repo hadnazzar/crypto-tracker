@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {AppContext} from '../Context';
+import { AppContext } from '../Context';
 
 class Home extends Component {
   state = {
@@ -21,17 +21,18 @@ class Home extends Component {
   }
 
   dropdownChange = (e) => {
-    this.setState({limit:e.target.value})
+    this.setState({ limit: e.target.value })
   }
 
   convertCurrency = (price) => (
     '$' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
   )
 
-  renderCryptoRows = () => {
-    // const filterNumber = parseInt(this.state.limit)
-    // const filteredCryptoList = this.state.cryptoList.slice(0,)
-    return this.state.cryptoList.map(crypto => (
+  renderCryptoRows = (limit) => {
+    const {cryptoList} = this.state
+    const limitNumber = parseInt(limit)
+    const filteredCryptoList = isNaN(limitNumber) ? cryptoList : cryptoList.slice(0,limitNumber)
+    return filteredCryptoList.map(crypto => (
       <tr key={crypto.id}>
         <th scope="row">{crypto.rank}</th>
         <td>{crypto.name}</td>
@@ -45,40 +46,41 @@ class Home extends Component {
 
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col-sm-12">
-            <h1 className="float-left">Home</h1>
-            <div className="float-right mt-2">
-            <AppContext.Consumer>
-              {(context) => (
-                <select onChange={(e) => context.changeCryptoLimit(e.target.value)} value={this.state.value}>
-                <option value="100">100</option>
-                <option value="20">20</option>
-                <option value="10">10</option>
-                <option value="all">All</option>
-              </select>
-              )}
-              </AppContext.Consumer>
+      <AppContext.Consumer>
+        {(context) => (
+          <div className="container">
+            <div className="row">
+              <div className="col-sm-12">
+                <h1 className="float-left">Home</h1>
+                <div className="float-right mt-2">
+                  <select onChange={(e) => context.changeCryptoLimit(e.target.value)} value={this.state.value}>
+                    <option value="100">100</option>
+                    <option value="20">20</option>
+                    <option value="10">10</option>
+                    <option value="all">All</option>
+                  </select>
+                </div>
+              </div>
+              <table className="table">
+                <thead>
+                  <tr>
+                    <th scope="col">Rank</th>
+                    <th scope="col">Name</th>
+                    <th scope="col">Price</th>
+                    <th scope="col">Price Change (24h)</th>
+                    <th scope="col">Market Cap</th>
+                    <th scope="col">Volume (24h)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {this.renderCryptoRows(context.cryptoLimit)}
+                </tbody>
+              </table>
             </div>
           </div>
-          <table className="table table-responsive ">
-            <thead>
-              <tr>
-                <th scope="col">Rank</th>
-                <th scope="col">Name</th>
-                <th scope="col">Price</th>
-                <th scope="col">Price Change (24h)</th>
-                <th scope="col">Market Cap</th>
-                <th scope="col">Volume (24h)</th>
-              </tr>
-            </thead>
-            <tbody>
-              {this.renderCryptoRows()}
-            </tbody>
-          </table>
-        </div>
-      </div>
+        )}
+      </AppContext.Consumer>
+
     )
   }
 }
