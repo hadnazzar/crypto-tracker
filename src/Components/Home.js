@@ -2,34 +2,12 @@ import React, { Component } from 'react'
 import { AppContext } from '../Context';
 
 class Home extends Component {
-  state = {
-    cryptoList: [],
-  }
-
-  componentDidMount() {
-    fetch('https://api.coinmarketcap.com/v2/ticker/', {
-      method: 'get',
-    })
-      .then(response => response.json())
-      .then(response => {
-        console.log(response)
-        const responseArr = Object.values(response.data)
-          .sort(function (a, b) { return a.rank - b.rank });
-        this.setState({ cryptoList: responseArr })
-      })
-      .catch(error => console.error('Error:', error));
-  }
-
-  dropdownChange = (e) => {
-    this.setState({ limit: e.target.value })
-  }
 
   convertCurrency = (price) => (
     '$' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
   )
 
-  renderCryptoRows = (limit) => {
-    const {cryptoList} = this.state
+  renderCryptoRows = (limit, cryptoList=[]) => {
     const limitNumber = parseInt(limit)
     const filteredCryptoList = isNaN(limitNumber) ? cryptoList : cryptoList.slice(0,limitNumber)
     return filteredCryptoList.map(crypto => (
@@ -53,7 +31,7 @@ class Home extends Component {
               <div className="col-sm-12">
                 <h1 className="float-left">Home</h1>
                 <div className="float-right mt-2">
-                  <select onChange={(e) => context.changeCryptoLimit(e.target.value)} value={this.state.value}>
+                  <select onChange={(e) => context.changeCryptoLimit(e.target.value)} value={context.cryptoLimit}>
                     <option value="100">100</option>
                     <option value="20">20</option>
                     <option value="10">10</option>
@@ -73,7 +51,7 @@ class Home extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.renderCryptoRows(context.cryptoLimit)}
+                  {this.renderCryptoRows(context.cryptoLimit, context.cryptoList)}
                 </tbody>
               </table>
             </div>
