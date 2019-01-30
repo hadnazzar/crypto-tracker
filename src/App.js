@@ -3,16 +3,19 @@ import './App.css';
 import { BrowserRouter } from 'react-router-dom';
 import Header from './Components/Header'
 import MainApp from './Components/MainApp'
+import { AppProvider } from './Context'
 
 class App extends Component {
   render() {
     return (
-      <BrowserRouter>
-        <div>
-          <Header />
-          <MainApp />
-        </div>
-      </BrowserRouter>
+      <AppProvider>
+        <BrowserRouter>
+          <div>
+            <Header />
+            <MainApp />
+          </div>
+        </BrowserRouter>
+      </AppProvider> 
     );
   }
 }

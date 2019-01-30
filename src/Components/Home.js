@@ -1,9 +1,9 @@
 import React, { Component } from 'react'
+import {AppContext} from '../Context';
 
 class Home extends Component {
   state = {
     cryptoList: [],
-    limit: "100"
   }
 
   componentDidMount() {
@@ -29,8 +29,8 @@ class Home extends Component {
   )
 
   renderCryptoRows = () => {
-    const filterNumber = parseInt(this.state.limit)
-    const filteredCryptoList = this.state.cryptoList.slice(0,)
+    // const filterNumber = parseInt(this.state.limit)
+    // const filteredCryptoList = this.state.cryptoList.slice(0,)
     return this.state.cryptoList.map(crypto => (
       <tr key={crypto.id}>
         <th scope="row">{crypto.rank}</th>
@@ -50,12 +50,16 @@ class Home extends Component {
           <div className="col-sm-12">
             <h1 className="float-left">Home</h1>
             <div className="float-right mt-2">
-              <select onChange={this.dropdownChange} value={this.state.value}>
+            <AppContext.Consumer>
+              {(context) => (
+                <select onChange={(e) => context.changeCryptoLimit(e.target.value)} value={this.state.value}>
                 <option value="100">100</option>
                 <option value="20">20</option>
                 <option value="10">10</option>
                 <option value="all">All</option>
               </select>
+              )}
+              </AppContext.Consumer>
             </div>
           </div>
           <table className="table table-responsive ">
