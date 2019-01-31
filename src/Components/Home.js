@@ -7,10 +7,8 @@ class Home extends Component {
     '$' + price.toFixed(2).replace(/\d(?=(\d{3})+\.)/g, '$&,')
   )
 
-  renderCryptoRows = (limit, cryptoList=[]) => {
-    const limitNumber = parseInt(limit)
-    const filteredCryptoList = isNaN(limitNumber) ? cryptoList : cryptoList.slice(0,limitNumber)
-    return filteredCryptoList.map(crypto => (
+  renderCryptoRows = (cryptoList) => {
+    return cryptoList.map(crypto => (
       <tr key={crypto.id}>
         <th scope="row">{crypto.rank}</th>
         <td>{crypto.name}</td>
@@ -51,7 +49,7 @@ class Home extends Component {
                   </tr>
                 </thead>
                 <tbody>
-                  {this.renderCryptoRows(context.cryptoLimit, context.cryptoList)}
+                  {this.renderCryptoRows(context.cryptoList)}
                 </tbody>
               </table>
             </div>

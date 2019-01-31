@@ -22,11 +22,17 @@ export class AppProvider extends Component {
       .catch(error => console.error('Error:', error));
   }
 
+  limitCurrencies = () => {
+    const {cryptoLimit, cryptoList} = this.state;
+    const limitNumber = parseInt(cryptoLimit)
+    return isNaN(limitNumber) ? cryptoList : cryptoList.slice(1,limitNumber)
+  }
+
   render() {
     return (
       <AppContext.Provider value={{
         cryptoLimit: this.state.cryptoLimit,
-        cryptoList: this.state.cryptoList,
+        cryptoList: this.limitCurrencies(),
         changeCryptoLimit: (number) => {
           this.setState({ cryptoLimit: number })
         }
